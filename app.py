@@ -25,9 +25,7 @@ svc_list = ("bigtree-auth",
 "qsls-postloan",
 "qsls-receivable",
 "qsls-app",
-"bigtree-pay",
-"test1",
-"test2")
+"bigtree-pay")
 
 def get_svc_info(svc_list):
     url = 'http://spboot.bigtreefinance.com:8080/admin/applications'
