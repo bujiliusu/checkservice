@@ -25,7 +25,9 @@ svc_list = ("bigtree-auth",
 "qsls-postloan",
 "qsls-receivable",
 "qsls-app",
-"bigtree-pay")
+"bigtree-pay",
+"test1",
+"test2")
 
 def get_svc_info(svc_list):
     url = 'http://spboot.bigtreefinance.com:8080/admin/applications'
@@ -81,7 +83,8 @@ if __name__ == '__main__':
     message = ""
     for svc_info in svc_info_list:
         if svc_info.get('status') != 'UP':
-            message += "\n\n" + svc_info.get('name') + "服务异常，请登录服务器检查\n"
-    message = message ?
+            message += svc_info.get('name') + "服务异常，请登录服务器检查\n"
+    message = message if message else "所有服务正常"
+    #print(message)
 
     post_dingTaik(message)
