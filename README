@@ -1,4 +1,1 @@
-使用方法,版本使用python3
-安装依赖：pip install requests
-运行： python app.py
-
+检查服务状态
