@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checkspoot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: checkspoot
+  template:
+    metadata:
+      labels:
+        app: checkspoot
+    spec:
+      containers:
+        - name: checkspoot
+          image: registry.int.bigtree.tech/aiops/checkspoot:v0.4
+          args: ["gunicorn", "-w 1", "app:app", "-b 0.0.0.0:5000"]
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+          - name: settings
+            mountPath: /code/settings.py
+            subPath: settings.py
+      volumes:
+      - name: settings
+        configMap:
+          name: checkspoot-settings
+          items:
+          - key: settings.py
+            path: settings.py
