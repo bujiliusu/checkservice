@@ -11,7 +11,7 @@ import time
 from datetime import datetime
 
 app = Flask(__name__)
-app.config.from_object('code.settings.APSchedulerJobConfig')
+app.config.from_object('settings.APSchedulerJobConfig')
 url = app.config['URL']
 svc_list = app.config['SCV_LIST']
 app_secret = app.config['APP_SECRET']
