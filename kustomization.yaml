@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: suhexin
+namespace: ops
 resources:
-- ./checkspoot-config.yaml
-- ./checkspoot-dep.yaml
-- ./checkspoot-svc.yaml
+- ./checkservice-config.yaml
+- ./checkservice-dep.yaml
+- ./checkservice-svc.yaml

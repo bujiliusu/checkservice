@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: checkspoot
+  name: checkservice
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: checkspoot
+      app: checkservice
   template:
     metadata:
       labels:
-        app: checkspoot
+        app: checkservice
     spec:
       containers:
-        - name: checkspoot
-          image: registry.int.bigtree.tech/aiops/checkspoot:v0.4
+        - name: checkservice
+          image: registry.int.bigtree.tech/aiops/checkservice:v0.4
           args: ["gunicorn", "-w 1", "app:app", "-b 0.0.0.0:5000"]
           ports:
             - containerPort: 5000
@@ -25,7 +25,7 @@ spec:
       volumes:
       - name: settings
         configMap:
-          name: checkspoot-settings
+          name: checkservice-settings
           items:
           - key: settings.py
             path: settings.py

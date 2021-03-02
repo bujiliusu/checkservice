@@ -1,21 +1,53 @@
+from flask import Flask, request,abort,make_response
+from flask_apscheduler import APScheduler
 import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 import base64
 import hmac
 import json
 import hashlib
 import time
-
-from flask import Flask, request,abort,make_response
-
+from datetime import datetime
 
 app = Flask(__name__)
-app.config.from_object('settings.BaseConfig')
+app.config.from_object('code.settings.APSchedulerJobConfig')
 url = app.config['URL']
 svc_list = app.config['SCV_LIST']
-print(svc_list)
 app_secret = app.config['APP_SECRET']
 
-def get_svc_info(url, svc_list):
+
+def get_git_info():
+    ids = ['998', '1004']
+    baseurl = "https://gitlab.bigtree.com/api/v4/projects/{}/merge_requests?state=merged"
+    url = "https://gitlab.bigtree.com/api/v4/projects/998/merge_requests?state=merged"
+    urls = [ {'id':id, 'url': baseurl.format(id)} for id in ids]
+    headr = {
+        'private-token': 'gFPx-7R9byeF2wxUhJnS'
+    }
+    result_info_list = []
+    for url in urls:
+        result = requests.get(url['url'], headers=headr, verify=False).json()
+        result_info = {}
+        result_info['id'] = url['id']
+        result_info['result'] = result
+        result_info_list.append(result_info)
+    return result_info_list
+
+def check_service():
+    result_info_list = get_git_info()
+    for result_info in result_info_list:
+        for merge in result_info['result']:
+            merged_at = merge['merged_at'].split('.')[0]
+            merged_at = datetime.strptime(merged_at, '%Y-%m-%dT%H:%M:%S')
+            target_branch = merge['target_branch']
+            title = merge['title']
+            # if merged_at.date() == datetime.now().date() and target_branch == "master":
+            #     get_svc_info(url, svc_list, title)
+            if merged_at.date() == datetime.now().date():
+                print(merged_at, target_branch)
+
+def get_svc_info(url, svc_list, add_message=''):
     url = url
     svc_list = svc_list
     svc_info = {}
@@ -38,7 +70,13 @@ def get_svc_info(url, svc_list):
             svc_info['name'] = svc
             svc_info['status'] = 'DOWN'
             svc_info_list.append(svc_info)
-    return svc_info_list
+    message = ""
+    for svc_info in svc_info_list:
+        if svc_info.get('status') != 'UP':
+            message += svc_info.get('name') + "服务异常，请登录服务器检查\n"
+    message = message if message else "所有服务正常"
+    message = add_message + message
+    post_ding(message, url)
 
 
 def getsign(app_secret, post_timestamp):
@@ -120,14 +158,7 @@ def index():
             response = make_response("<html></html>, 200")
             response.headers = headers
             return response
-
-        svc_info_list = get_svc_info(url, svc_list)
-        message = ""
-        for svc_info in svc_info_list:
-            if svc_info.get('status') != 'UP':
-                message += svc_info.get('name') + "服务异常，请登录服务器检查\n"
-        message = message if message else "所有服务正常"
-        post_ding(message, sessionWebhook)
+        get_svc_info(url, svc_list)
         headers = {
             "content-type": "text/plain"
         }
@@ -136,4 +167,8 @@ def index():
         return response
 
 if __name__ == "__main__":
+    scheduler = APScheduler()
+    scheduler.init_app(app)
+    scheduler.start()
     app.run(host='0.0.0.0')
+

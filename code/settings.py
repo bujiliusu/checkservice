@@ -27,3 +27,19 @@ class BaseConfig(object):
                 "qsls-app",
                 "bigtree-pay"
                 )
+
+class APSchedulerJobConfig(BaseConfig):
+    SCHEDULER_API_ENABLED = True
+    JOBS = [
+        {
+            'id': 'No1',
+            'func': 'app:check_service',
+            'args': '',
+            'trigger': {
+                'type': 'cron',
+                'day_of_week': 'mon-sun',
+                'hour': '13, 18',
+                'minute': '13'
+            }
+        }
+    ]

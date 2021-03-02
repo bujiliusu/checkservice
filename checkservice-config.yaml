@@ -8,4 +8,4 @@ data:
         TESTTYPE = ('bvt', 'all')
 kind: ConfigMap
 metadata:
-  name: checkspoot-settings
+  name: checkservice-settings
