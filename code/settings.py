@@ -38,8 +38,8 @@ class APSchedulerJobConfig(BaseConfig):
             'trigger': {
                 'type': 'cron',
                 'day_of_week': 'mon-sun',
-                'hour': '13, 18',
-                'minute': '13'
+                'hour': '13, 22',
+                'minute': '10'
             }
         }
     ]

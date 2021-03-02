@@ -42,10 +42,8 @@ def check_service():
             merged_at = datetime.strptime(merged_at, '%Y-%m-%dT%H:%M:%S')
             target_branch = merge['target_branch']
             title = merge['title']
-            # if merged_at.date() == datetime.now().date() and target_branch == "master":
-            #     get_svc_info(url, svc_list, title)
-            if merged_at.date() == datetime.now().date():
-                print(merged_at, target_branch)
+            if merged_at.date() == datetime.now().date() and target_branch == "master":
+                get_svc_info(url, svc_list, title)
 
 def get_svc_info(url, svc_list, add_message=''):
     url = url
