@@ -1,5 +1,6 @@
 from flask import Flask, request,abort,make_response
 from flask_apscheduler import APScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -165,7 +166,7 @@ def index():
         return response
 
 if __name__ == "__main__":
-    scheduler = APScheduler()
+    scheduler = APScheduler(BackgroundScheduler(timezone="Asia/Shanghai"))
     scheduler.init_app(app)
     scheduler.start()
     app.run(host='0.0.0.0')
