@@ -40,7 +40,7 @@ class APSchedulerJobConfig(BaseConfig):
                 'type': 'cron',
                 'day_of_week': 'mon-sun',
                 'hour': '14, 22',
-                'minute': '03'
+                'minute': '27'
             }
         }
     ]
