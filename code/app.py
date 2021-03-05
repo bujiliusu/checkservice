@@ -16,6 +16,7 @@ app.config.from_object('settings.APSchedulerJobConfig')
 url = app.config['URL']
 svc_list = app.config['SCV_LIST']
 app_secret = app.config['APP_SECRET']
+token = app.config['TOKEN']
 
 
 def get_git_info():
@@ -39,11 +40,11 @@ def check_service():
     result_info_list = get_git_info()
     for result_info in result_info_list:
         for merge in result_info['result']:
-            merged_at = merge['merged_at'].split('.')[0]
-            merged_at = datetime.strptime(merged_at, '%Y-%m-%dT%H:%M:%S')
+            merged_at_string = merge['merged_at'].split('.')[0]
+            merged_at = datetime.strptime(merged_at_string, '%Y-%m-%dT%H:%M:%S')
             target_branch = merge['target_branch']
             title = merge['title']
-            title = title + '发版，服务健康检查:\n'
+            title = title + '于' + merged_at_string + 'merge到master，服务健康检查:\n'
             if merged_at.date() == datetime.now().date() and target_branch == "master":
                 message = get_svc_info(url, svc_list, title)
                 post_ding_git(message)
@@ -127,7 +128,7 @@ def post_ding_git(content):
     :return:
     """
     content = content
-    token = "a2b9cd66a38b8df3a5512b63ce116913f02c6246ebd5e5a9a39f132abad936d4"
+    global token
     url = "https://oapi.dingtalk.com/robot/send?access_token=" + token
     body = {
         "msgtype": "text",
