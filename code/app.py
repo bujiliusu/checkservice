@@ -19,7 +19,7 @@ app_secret = app.config['APP_SECRET']
 
 
 def get_git_info():
-    ids = ['998', '1004']
+    ids = ['998', '1004', '1150']
     baseurl = "https://gitlab.bigtree.com/api/v4/projects/{}/merge_requests?state=merged"
     url = "https://gitlab.bigtree.com/api/v4/projects/998/merge_requests?state=merged"
     urls = [ {'id':id, 'url': baseurl.format(id)} for id in ids]
@@ -75,7 +75,7 @@ def get_svc_info(url, svc_list, add_message=''):
             message += svc_info.get('name') + "服务异常，请登录服务器检查\n"
     message = message if message else "所有服务正常"
     message = add_message + message
-    post_ding(message, url)
+    return message
 
 
 def getsign(app_secret, post_timestamp):
@@ -102,6 +102,7 @@ def post_ding(content, webhook):
     """
     content = content
     url = webhook
+    print(webhook)
     body = {
         "msgtype": "text",
         "text": {
@@ -157,7 +158,8 @@ def index():
             response = make_response("<html></html>, 200")
             response.headers = headers
             return response
-        get_svc_info(url, svc_list)
+        message = get_svc_info(url, svc_list)
+        post_ding(message, sessionWebhook)
         headers = {
             "content-type": "text/plain"
         }

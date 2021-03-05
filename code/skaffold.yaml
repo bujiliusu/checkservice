@@ -1,0 +1,17 @@
+apiVersion: skaffold/v1beta3
+kind: Config
+build:
+  artifacts:
+    - image: registry.int.bigtree.tech/aiops/checkservice
+  local:
+    push: true
+deploy:
+  kubectl:
+    manifests:
+      - ../checkservice-config.yaml	
+      - ../checkservice-dep.yaml	
+      - ../checkservice-svc.yaml
+    flags:
+      apply:
+        - --force=true
+        - --grace-period=0

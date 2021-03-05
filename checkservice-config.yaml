@@ -51,3 +51,4 @@ data:
 kind: ConfigMap
 metadata:
   name: checkservice-settings
+  namespace: ops
