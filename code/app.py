@@ -43,8 +43,10 @@ def check_service():
             merged_at = datetime.strptime(merged_at, '%Y-%m-%dT%H:%M:%S')
             target_branch = merge['target_branch']
             title = merge['title']
+            title = title + '发版，服务健康检查:\n'
             if merged_at.date() == datetime.now().date() and target_branch == "master":
-                get_svc_info(url, svc_list, title)
+                message = get_svc_info(url, svc_list, title)
+                post_ding_git(message)
 
 def get_svc_info(url, svc_list, add_message=''):
     url = url
@@ -102,7 +104,31 @@ def post_ding(content, webhook):
     """
     content = content
     url = webhook
-    print(webhook)
+    body = {
+        "msgtype": "text",
+        "text": {
+            "content": content,
+        }
+    }
+    headers = {
+        'Content-Type': 'application/json; charset=utf-8',
+    }
+
+    try:
+        requests.adapters.DEFAULT_RETRIES = 2
+        result= requests.post(url, data=json.dumps(body), headers=headers, verify=False, timeout=5)
+    except Exception as ee:
+        print(ee)
+def post_ding_git(content):
+    """
+    回调信息，即发送给webhook的信息
+    :param content:
+    :param webhook:
+    :return:
+    """
+    content = content
+    token = "a2b9cd66a38b8df3a5512b63ce116913f02c6246ebd5e5a9a39f132abad936d4"
+    url = "https://oapi.dingtalk.com/robot/send?access_token=" + token
     body = {
         "msgtype": "text",
         "text": {
