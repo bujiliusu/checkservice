@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: checkservice
+  namespace: ops
 spec:
   replicas: 1
   selector:
@@ -14,7 +15,7 @@ spec:
     spec:
       containers:
         - name: checkservice
-          image: registry.int.bigtree.tech/aiops/checkservice:v0.1
+          image: registry.int.bigtree.tech/aiops/checkservice:v0.2
           args: ["python", "app.py"]
           ports:
             - containerPort: 5000
@@ -22,6 +23,10 @@ spec:
           - name: settings
             mountPath: /code/settings.py
             subPath: settings.py
+      hostAliases:
+        - ip: "115.182.11.70"
+          hostnames:
+            - "spboot.bigtreefinance.com"
       volumes:
       - name: settings
         configMap:

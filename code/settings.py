@@ -1,6 +1,6 @@
 class BaseConfig(object):
     URL = 'http://spboot.bigtreefinance.com:8080/admin/applications'
-    APP_SECRET = '0UC8fpFH9sUGww7_b8AjNmmLwEPl6u7b-NyWoezr1gUQfwH3bslOXp5C4znxC4c_'
+    APP_SECRET = '3yCIyIjvAnvpokzZrrS2RC4M6TGVU4IsliouUot8PIktvRVPTrSSrueyzdb2vSTe'
     SCV_LIST = ("bigtree-auth",
                 "bigtree-sign",
                 "bigtree-mq",
@@ -30,6 +30,7 @@ class BaseConfig(object):
 
 class APSchedulerJobConfig(BaseConfig):
     SCHEDULER_API_ENABLED = True
+    SCHEDULER_TIMEZONE = 'Asia/Shanghai'
     JOBS = [
         {
             'id': 'No1',
@@ -38,8 +39,8 @@ class APSchedulerJobConfig(BaseConfig):
             'trigger': {
                 'type': 'cron',
                 'day_of_week': 'mon-sun',
-                'hour': '13, 22',
-                'minute': '10'
+                'hour': '11, 22',
+                'minute': '25'
             }
         }
     ]
