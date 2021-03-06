@@ -20,7 +20,7 @@ token = app.config['TOKEN']
 
 
 def get_git_info():
-    ids = ['998', '1004', '1150']
+    ids = ['998', '1004']
     baseurl = "https://gitlab.bigtree.com/api/v4/projects/{}/merge_requests?state=merged"
     url = "https://gitlab.bigtree.com/api/v4/projects/998/merge_requests?state=merged"
     urls = [ {'id':id, 'url': baseurl.format(id)} for id in ids]
