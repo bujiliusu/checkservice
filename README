@@ -1,1 +1,3 @@
 检查服务状态
+docker build -t checkservice code
+docker tag checkservice registry.int.bigtree.tech/aiops/checkservice:v0.3

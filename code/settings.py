@@ -31,6 +31,7 @@ class BaseConfig(object):
 class APSchedulerJobConfig(BaseConfig):
     SCHEDULER_API_ENABLED = True
     SCHEDULER_TIMEZONE = 'Asia/Shanghai'
+    TOKEN = 'a2b9cd66a38b8df3a5512b63ce116913f02c6246ebd5e5a9a39f132abad936d4'
     JOBS = [
         {
             'id': 'No1',
@@ -39,8 +40,8 @@ class APSchedulerJobConfig(BaseConfig):
             'trigger': {
                 'type': 'cron',
                 'day_of_week': 'mon-sun',
-                'hour': '11, 22',
-                'minute': '25'
+                'hour': '13, 22',
+                'minute': '10'
             }
         }
     ]
