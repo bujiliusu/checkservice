@@ -9,7 +9,7 @@ import hmac
 import json
 import hashlib
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.config.from_object('settings.APSchedulerJobConfig')
@@ -42,10 +42,16 @@ def check_service():
         for merge in result_info['result']:
             merged_at_string = merge['merged_at'].split('.')[0]
             merged_at = datetime.strptime(merged_at_string, '%Y-%m-%dT%H:%M:%S')
+            merged_at = merged_at + timedelta(hours=8)
+            merged_at_string = merged_at.strftime("%Y-%m-%d %H:%M:%S")
             target_branch = merge['target_branch']
-            title = merge['title']
-            title = title + '于' + merged_at_string + 'merge到master，服务健康检查:\n'
             if merged_at.date() == datetime.now().date() and target_branch == "master":
+                title = merge['title']
+                if result_info['id'] == '998':
+                    name = 'bigtree-deploy'
+                if result_info['id'] == '1004':
+                    name = 'qsls-deploy'
+                title = '版本库：' + name + '于' + merged_at_string + '合入：' + title + '，服务健康检查:\n'
                 message = get_svc_info(url, svc_list, title)
                 post_ding_git(message)
 
