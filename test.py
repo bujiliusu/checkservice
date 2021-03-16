@@ -81,14 +81,34 @@ def get_git_info():
         result_info_list.append(result_info)
     return result_info_list
 
-result_info_list = get_git_info()
-print(json.dumps(result_info_list[0], indent=4))
+# result_info_list = get_git_info()
+# print(json.dumps(result_info_list[0], indent=4))
 
 from datetime import datetime,date
-time1 = "2021-02-26T02:51:10"
+time1 = "2021-02-26T13:11:10"
 d = date.today()
-print(d.year)
-print(d.isoformat())
-print(d.strftime('%Y/%m/%d'))
+# print(d.year)
+# print(d.isoformat())
+# print(d.strftime('%Y/%m/%d'))
 time2 = datetime.strptime(time1, '%Y-%m-%dT%H:%M:%S')
 print(time2, type(time2))
+print(time2.hour, type(time2.hour))
+print(time2.min, type(time2.min))
+# if time2.hour >= 13 and time2.min >= 10:
+#     print('sucess')
+
+string2 = "2021-02-26 13:10:0134"
+a = string2.split()
+print(a)
+if a[1] > '13:10:00':
+    print('sucess')
+if time2.hour == 13:
+    print(time2.date())
+print(datetime.now().hour, type(datetime.now().hour))
+
+for i in range(0, 10):
+    for j in range(0, 10):
+
+        if j == 5:
+            continue
+        print(i, j)

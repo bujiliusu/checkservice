@@ -46,12 +46,15 @@ def check_service():
             merged_at_string = merged_at.strftime("%Y-%m-%d %H:%M:%S")
             target_branch = merge['target_branch']
             if merged_at.date() == datetime.now().date() and target_branch == "master":
+                if datetime.now().hour == 22:
+                    if merged_at_string.split()[1] <= '13:10:00':
+                        continue
                 title = merge['title']
                 if result_info['id'] == '998':
                     name = 'bigtree-deploy'
                 if result_info['id'] == '1004':
                     name = 'qsls-deploy'
-                title = '版本库：' + name + '于' + merged_at_string + '合入：' + title + '，服务健康检查:\n'
+                title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
                 message = get_svc_info(url, svc_list, title)
                 post_ding_git(message)
 
