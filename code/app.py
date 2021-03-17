@@ -9,17 +9,18 @@ import hmac
 import json
 import hashlib
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.config.from_object('settings.APSchedulerJobConfig')
 url = app.config['URL']
 svc_list = app.config['SCV_LIST']
 app_secret = app.config['APP_SECRET']
+token = app.config['TOKEN']
 
 
 def get_git_info():
-    ids = ['998', '1004', '1150']
+    ids = ['998', '1004']
     baseurl = "https://gitlab.bigtree.com/api/v4/projects/{}/merge_requests?state=merged"
     url = "https://gitlab.bigtree.com/api/v4/projects/998/merge_requests?state=merged"
     urls = [ {'id':id, 'url': baseurl.format(id)} for id in ids]
@@ -39,12 +40,21 @@ def check_service():
     result_info_list = get_git_info()
     for result_info in result_info_list:
         for merge in result_info['result']:
-            merged_at = merge['merged_at'].split('.')[0]
-            merged_at = datetime.strptime(merged_at, '%Y-%m-%dT%H:%M:%S')
+            merged_at_string = merge['merged_at'].split('.')[0]
+            merged_at = datetime.strptime(merged_at_string, '%Y-%m-%dT%H:%M:%S')
+            merged_at = merged_at + timedelta(hours=8)
+            merged_at_string = merged_at.strftime("%Y-%m-%d %H:%M:%S")
             target_branch = merge['target_branch']
-            title = merge['title']
-            title = title + '发版，服务健康检查:\n'
             if merged_at.date() == datetime.now().date() and target_branch == "master":
+                if datetime.now().hour == 22:
+                    if merged_at_string.split()[1] <= '13:10:00':
+                        continue
+                title = merge['title']
+                if result_info['id'] == '998':
+                    name = 'bigtree-deploy'
+                if result_info['id'] == '1004':
+                    name = 'qsls-deploy'
+                title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
                 message = get_svc_info(url, svc_list, title)
                 post_ding_git(message)
 
@@ -127,7 +137,7 @@ def post_ding_git(content):
     :return:
     """
     content = content
-    token = "a2b9cd66a38b8df3a5512b63ce116913f02c6246ebd5e5a9a39f132abad936d4"
+    global token
     url = "https://oapi.dingtalk.com/robot/send?access_token=" + token
     body = {
         "msgtype": "text",
