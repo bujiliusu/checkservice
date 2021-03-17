@@ -13,7 +13,7 @@ import hashlib
 import time
 from datetime import datetime, timedelta
 import logging
-logging.getLogger('apscheduler').setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.INFO)
 
 app = Flask(__name__)
 app.config.from_object('settings.APSchedulerJobConfig')
@@ -60,7 +60,7 @@ def check_service():
                     name = 'qsls-deploy'
                 title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
                 message = get_svc_info(url, svc_list, title)
-                print(message)
+                logging.info(message)
                 post_ding_git(message)
 
 def get_svc_info(url, svc_list, add_message=''):
@@ -157,7 +157,6 @@ def post_ding_git(content):
     try:
         requests.adapters.DEFAULT_RETRIES = 2
         result= requests.post(url, data=json.dumps(body), headers=headers, verify=False, timeout=5)
-        print(result.text)
         logging.info(result.text)
     except Exception as ee:
         print(ee)
