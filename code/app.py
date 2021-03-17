@@ -60,6 +60,7 @@ def check_service():
                     name = 'qsls-deploy'
                 title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
                 message = get_svc_info(url, svc_list, title)
+                print(message)
                 post_ding_git(message)
 
 def get_svc_info(url, svc_list, add_message=''):
