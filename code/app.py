@@ -1,6 +1,8 @@
 from flask import Flask, request,abort,make_response
 from flask_apscheduler import APScheduler
 from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.events import EVENT_ALL
+from apscheduler.events import SchedulerEvent
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -10,6 +12,8 @@ import json
 import hashlib
 import time
 from datetime import datetime, timedelta
+import logging
+logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 
 app = Flask(__name__)
 app.config.from_object('settings.APSchedulerJobConfig')
@@ -152,8 +156,15 @@ def post_ding_git(content):
     try:
         requests.adapters.DEFAULT_RETRIES = 2
         result= requests.post(url, data=json.dumps(body), headers=headers, verify=False, timeout=5)
+        print(result.text)
+        logging.info(result.text)
     except Exception as ee:
         print(ee)
+
+def my_listener(event: SchedulerEvent):
+
+    time_now = datetime.now()
+    print("starting cron at", time_now, event.code)
 
 @app.route("/", methods=['GET','POST', 'HEAD'])
 def index():
@@ -205,6 +216,7 @@ def index():
 
 if __name__ == "__main__":
     scheduler = APScheduler(BackgroundScheduler(timezone="Asia/Shanghai"))
+    scheduler.add_listener(my_listener, EVENT_ALL)
     scheduler.init_app(app)
     scheduler.start()
     app.run(host='0.0.0.0')
