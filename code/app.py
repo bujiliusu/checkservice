@@ -21,6 +21,7 @@ url = app.config['URL']
 svc_list = app.config['SCV_LIST']
 app_secret = app.config['APP_SECRET']
 token = app.config['TOKEN']
+mytoken = app.config['MYTOKEN']
 
 
 def get_git_info():
@@ -143,7 +144,9 @@ def post_ding_git(content):
     """
     content = content
     global token
+    global mytoken
     url = "https://oapi.dingtalk.com/robot/send?access_token=" + token
+    myurl = "https://oapi.dingtalk.com/robot/send?access_token=" + mytoken
     body = {
         "msgtype": "text",
         "text": {
@@ -157,7 +160,9 @@ def post_ding_git(content):
     try:
         requests.adapters.DEFAULT_RETRIES = 2
         result= requests.post(url, data=json.dumps(body), headers=headers, verify=False, timeout=5)
+        myresult= requests.post(myurl, data=json.dumps(body), headers=headers, verify=False, timeout=5)
         logging.info(result.text)
+        logging.info(myresult.text)
     except Exception as ee:
         print(ee)
 

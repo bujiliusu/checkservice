@@ -34,7 +34,7 @@ class APSchedulerJobConfig(BaseConfig):
     SCHEDULER_API_ENABLED = True
     SCHEDULER_TIMEZONE = 'Asia/Shanghai'
     # TOKEN = 'a2b9cd66a38b8df3a5512b63ce116913f02c6246ebd5e5a9a39f132abad936d4'
-    # TOKEN = '6fa39fc3d312d72a4b0c10064d4d13c04e6aaf634a30b75cc6bdcc0390528cf2'
+    MYTOKEN = '6fa39fc3d312d72a4b0c10064d4d13c04e6aaf634a30b75cc6bdcc0390528cf2'
     TOKEN = 'ddaa188cf6d31915cd653d54538bd3d8bdc88d9b48a4e6ed4cdcf2e9f7dbd300'
     JOBS = [
         {
