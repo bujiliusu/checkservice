@@ -37,3 +37,9 @@ with open('test3', 'r') as f:
 name = "\u4F60"
 name.encode().decode('unicode_escape')
 print(name)
+
+with open('test8.properties', 'r', encoding='ascii') as f:
+    s = f.read()
+    a= s.encode().decode('unicode_escape')
+    with open('test8.properties.bak', 'w', encoding='utf-8') as f:
+        f.write(a)
