@@ -15,6 +15,6 @@ f.write('显示成功')
 f.close()
 print('..........')
 
-f = open('bigtree-pay.properties', 'rb')
+f = open('test5.properties', 'rb')
 data = f.read()
 print(chardet.detect(data))
