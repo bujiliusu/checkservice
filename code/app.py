@@ -137,6 +137,28 @@ def getsign(app_secret, post_timestamp):
     hmac_code = hmac.new(app_secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
     sign = base64.b64encode(hmac_code).decode('utf-8')
     return sign
+def post_ding_test(content):
+
+    content = content
+    global mytoken
+    myurl = "https://oapi.dingtalk.com/robot/send?access_token=" + mytoken
+    body = {
+        "msgtype": "text",
+        "text": {
+            "content": content,
+        }
+    }
+    headers = {
+        'Content-Type': 'application/json; charset=utf-8',
+    }
+
+    try:
+        requests.adapters.DEFAULT_RETRIES = 2
+        myresult= requests.post(myurl, data=json.dumps(body), headers=headers, verify=False, timeout=5)
+        logging.info(myresult.text)
+    except Exception as ee:
+        print(ee)
+
 def post_ding_pro(content):
     content = content
     global token
@@ -173,27 +195,6 @@ def post_ding_pro(content):
         else:
             myresult = requests.post(myurl, data=json.dumps(body), headers=headers, verify=False, timeout=5)
         logging.info(result.text)
-        logging.info(myresult.text)
-    except Exception as ee:
-        print(ee)
-def post_ding_test(content):
-
-    content = content
-    global mytoken
-    myurl = "https://oapi.dingtalk.com/robot/send?access_token=" + mytoken
-    body = {
-        "msgtype": "text",
-        "text": {
-            "content": content,
-        }
-    }
-    headers = {
-        'Content-Type': 'application/json; charset=utf-8',
-    }
-
-    try:
-        requests.adapters.DEFAULT_RETRIES = 2
-        myresult= requests.post(myurl, data=json.dumps(body), headers=headers, verify=False, timeout=5)
         logging.info(myresult.text)
     except Exception as ee:
         print(ee)
