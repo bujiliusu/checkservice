@@ -41,6 +41,28 @@ def get_git_info():
         result_info_list.append(result_info)
     return result_info_list
 
+def check_service():
+    result_info_list = get_git_info()
+    for result_info in result_info_list:
+        for merge in result_info['result']:
+            merged_at_string = merge['merged_at'].split('.')[0]
+            merged_at = datetime.strptime(merged_at_string, '%Y-%m-%dT%H:%M:%S')
+            merged_at = merged_at + timedelta(hours=8)
+            merged_at_string = merged_at.strftime("%Y-%m-%d %H:%M:%S")
+            target_branch = merge['target_branch']
+            if merged_at.date() == datetime.now().date() and target_branch == "master":
+                if datetime.now().hour == 22:
+                    if merged_at_string.split()[1] <= '13:15:00':
+                        continue
+                title = merge['title']
+                if result_info['id'] == '998':
+                    name = 'bigtree-deploy'
+                if result_info['id'] == '1004':
+                    name = 'qsls-deploy'
+                title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
+                message = get_svc_info(url, svc_list, title)
+                logging.info(message)
+                post_ding_pro(message)
 def check_service_test():
     result_info_list = get_git_info()
     message = ''
@@ -68,28 +90,6 @@ def check_service_test():
     logging.info(message)
     post_ding_test(message)
 
-def check_service():
-    result_info_list = get_git_info()
-    for result_info in result_info_list:
-        for merge in result_info['result']:
-            merged_at_string = merge['merged_at'].split('.')[0]
-            merged_at = datetime.strptime(merged_at_string, '%Y-%m-%dT%H:%M:%S')
-            merged_at = merged_at + timedelta(hours=8)
-            merged_at_string = merged_at.strftime("%Y-%m-%d %H:%M:%S")
-            target_branch = merge['target_branch']
-            if merged_at.date() == datetime.now().date() and target_branch == "master":
-                if datetime.now().hour == 22:
-                    if merged_at_string.split()[1] <= '13:15:00':
-                        continue
-                title = merge['title']
-                if result_info['id'] == '998':
-                    name = 'bigtree-deploy'
-                if result_info['id'] == '1004':
-                    name = 'qsls-deploy'
-                title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
-                message = get_svc_info(url, svc_list, title)
-                logging.info(message)
-                post_ding_pro(message)
 def get_svc_info(url, svc_list, add_message=''):
     url = url
     svc_list = svc_list
