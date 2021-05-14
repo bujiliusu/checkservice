@@ -79,7 +79,7 @@ def check_service():
             target_branch = merge['target_branch']
             if merged_at.date() == datetime.now().date() and target_branch == "master":
                 if datetime.now().hour == 22:
-                    if merged_at_string.split()[1] <= '13:10:00':
+                    if merged_at_string.split()[1] <= '13:15:00':
                         continue
                 title = merge['title']
                 if result_info['id'] == '998':
@@ -149,6 +149,18 @@ def post_ding_pro(content):
             "content": content,
         }
     }
+    body_test = {
+        "msgtype": "text",
+        "text": {
+            "content": content,
+        },
+        "at": {
+            "atMobiles": [
+                "18501257410"
+            ],
+            "isAtAll": False
+        }
+    }
     headers = {
         'Content-Type': 'application/json; charset=utf-8',
     }
@@ -156,7 +168,10 @@ def post_ding_pro(content):
     try:
         requests.adapters.DEFAULT_RETRIES = 2
         result= requests.post(url, data=json.dumps(body), headers=headers, verify=False, timeout=5)
-        myresult= requests.post(myurl, data=json.dumps(body), headers=headers, verify=False, timeout=5)
+        if content.find('异常') != -1:
+            myresult= requests.post(myurl, data=json.dumps(body_test), headers=headers, verify=False, timeout=5)
+        else:
+            myresult = requests.post(myurl, data=json.dumps(body), headers=headers, verify=False, timeout=5)
         logging.info(result.text)
         logging.info(myresult.text)
     except Exception as ee:
@@ -214,6 +229,7 @@ def index():
                 check_service_test()
             if content == 'check pro':
                 check_service()
+
         headers = {
             "content-type": "text/plain"
         }
