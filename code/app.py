@@ -205,8 +205,9 @@ def index():
         data = request.json
         senderNick = data.get('senderNick')
         if senderNick == '苏合信':
-            content = data.get('text').get('content')
+            content = data.get('text').get('content').strip()
             if content == 'check':
+                print(content)
                 text = "主动检查服务健康状态，结果发送测试群：check dev，结果发送测试与业务群：check pro"
                 post_ding_test(text)
             if content == 'check dev':

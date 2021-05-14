@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: checkservice
-          image: registry.int.bigtree.tech/aiops/checkservice:v0.16
+          image: registry.int.bigtree.tech/aiops/checkservice:v0.17
           args: ["python", "app.py"]
           ports:
             - containerPort: 5000
