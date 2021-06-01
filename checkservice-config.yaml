@@ -2,7 +2,7 @@ apiVersion: v1
 data:
   settings.py: |+
     class BaseConfig(object):
-        URL = 'http://spboot.bigtreefinance.com:8080/admin/applications'
+        URL = 'http://spboot.bigtreefinance.com/admin/applications'
         APP_SECRET = '0UC8fpFH9sUGww7_b8AjNmmLwEPl6u7b-NyWoezr1gUQfwH3bslOXp5C4znxC4c_'
 
         SCV_LIST = ("bigtree-auth",
