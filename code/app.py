@@ -52,7 +52,7 @@ def check_service():
             target_branch = merge['target_branch']
             if merged_at.date() == datetime.now().date() and target_branch == "master":
                 if datetime.now().hour == 22:
-                    if merged_at_string.split()[1] <= '13:10:00':
+                    if merged_at_string.split()[1] <= '13:15:00':
                         continue
                 title = merge['title']
                 if result_info['id'] == '998':
@@ -62,7 +62,33 @@ def check_service():
                 title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
                 message = get_svc_info(url, svc_list, title)
                 logging.info(message)
-                post_ding_git(message)
+                post_ding_pro(message)
+def check_service_test():
+    result_info_list = get_git_info()
+    message = ''
+    for result_info in result_info_list:
+        for merge in result_info['result']:
+            merged_at_string = merge['merged_at'].split('.')[0]
+            merged_at = datetime.strptime(merged_at_string, '%Y-%m-%dT%H:%M:%S')
+            merged_at = merged_at + timedelta(hours=8)
+            merged_at_string = merged_at.strftime("%Y-%m-%d %H:%M:%S")
+            target_branch = merge['target_branch']
+            if merged_at.date() == datetime.now().date() and target_branch == "master":
+                if datetime.now().hour == 22:
+                    if merged_at_string.split()[1] <= '13:10:00':
+                        continue
+                title = merge['title']
+                if result_info['id'] == '998':
+                    name = 'bigtree-deploy'
+                if result_info['id'] == '1004':
+                    name = 'qsls-deploy'
+                title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
+                text = get_svc_info(url, svc_list, title)
+                message = message + text + '\n'
+    if message == '':
+        message = '今日无上线'
+    logging.info(message)
+    post_ding_test(message)
 
 def get_svc_info(url, svc_list, add_message=''):
     url = url
@@ -111,41 +137,10 @@ def getsign(app_secret, post_timestamp):
     hmac_code = hmac.new(app_secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
     sign = base64.b64encode(hmac_code).decode('utf-8')
     return sign
-def post_ding(content, webhook):
-    """
-    回调信息，即发送给webhook的信息
-    :param content:
-    :param webhook:
-    :return:
-    """
-    content = content
-    url = webhook
-    body = {
-        "msgtype": "text",
-        "text": {
-            "content": content,
-        }
-    }
-    headers = {
-        'Content-Type': 'application/json; charset=utf-8',
-    }
+def post_ding_test(content):
 
-    try:
-        requests.adapters.DEFAULT_RETRIES = 2
-        result= requests.post(url, data=json.dumps(body), headers=headers, verify=False, timeout=5)
-    except Exception as ee:
-        print(ee)
-def post_ding_git(content):
-    """
-    回调信息，即发送给webhook的信息
-    :param content:
-    :param webhook:
-    :return:
-    """
     content = content
-    global token
     global mytoken
-    url = "https://oapi.dingtalk.com/robot/send?access_token=" + token
     myurl = "https://oapi.dingtalk.com/robot/send?access_token=" + mytoken
     body = {
         "msgtype": "text",
@@ -159,8 +154,46 @@ def post_ding_git(content):
 
     try:
         requests.adapters.DEFAULT_RETRIES = 2
-        result= requests.post(url, data=json.dumps(body), headers=headers, verify=False, timeout=5)
         myresult= requests.post(myurl, data=json.dumps(body), headers=headers, verify=False, timeout=5)
+        logging.info(myresult.text)
+    except Exception as ee:
+        print(ee)
+
+def post_ding_pro(content):
+    content = content
+    global token
+    global mytoken
+    url = "https://oapi.dingtalk.com/robot/send?access_token=" + token
+    myurl = "https://oapi.dingtalk.com/robot/send?access_token=" + mytoken
+    body = {
+        "msgtype": "text",
+        "text": {
+            "content": content,
+        }
+    }
+    body_test = {
+        "msgtype": "text",
+        "text": {
+            "content": content,
+        },
+        "at": {
+            "atMobiles": [
+                "18501257410"
+            ],
+            "isAtAll": False
+        }
+    }
+    headers = {
+        'Content-Type': 'application/json; charset=utf-8',
+    }
+
+    try:
+        requests.adapters.DEFAULT_RETRIES = 2
+        result= requests.post(url, data=json.dumps(body), headers=headers, verify=False, timeout=5)
+        if content.find('异常') != -1:
+            myresult= requests.post(myurl, data=json.dumps(body_test), headers=headers, verify=False, timeout=5)
+        else:
+            myresult = requests.post(myurl, data=json.dumps(body), headers=headers, verify=False, timeout=5)
         logging.info(result.text)
         logging.info(myresult.text)
     except Exception as ee:
@@ -186,32 +219,18 @@ def index():
             abort(404)
 
         data = request.json
-        sessionWebhook = data.get('sessionWebhook')
-        content = data.get('text').get('content')
-        content = content.split()
-        if len(content) != 2:
-            content = '参数错误，实例：check service'
-            post_ding(content=content, webhook=sessionWebhook)
-            headers = {
-                "content-type": "text/plain"
-            }
-            response = make_response("<html></html>, 200")
-            response.headers = headers
-            return response
+        senderNick = data.get('senderNick')
+        if senderNick == '苏合信':
+            content = data.get('text').get('content').strip()
+            if content == 'check':
+                print(content)
+                text = "主动检查服务健康状态，结果发送测试群：check dev，结果发送测试与业务群：check pro"
+                post_ding_test(text)
+            if content == 'check dev':
+                check_service_test()
+            if content == 'check pro':
+                check_service()
 
-        method = content[0]
-        site = content[1]
-        if method != "check" or site != "service":
-            content = '参数错误，实例：check service'
-            post_ding(content=content, webhook=sessionWebhook)
-            headers = {
-                "content-type": "text/plain"
-            }
-            response = make_response("<html></html>, 200")
-            response.headers = headers
-            return response
-        message = get_svc_info(url, svc_list)
-        post_ding(message, sessionWebhook)
         headers = {
             "content-type": "text/plain"
         }
