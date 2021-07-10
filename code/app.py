@@ -86,7 +86,10 @@ def check_service_test():
                 text = get_svc_info(url, svc_list, title)
                 message = message + text + '\n'
     if message == '':
-        message = '今日无上线'
+        message = '今日无上线\n'
+        title = '服务健康检查:\n'
+        text = get_svc_info(url, svc_list, title)
+        message = message + text + '\n'
     logging.info(message)
     post_ding_test(message)
 
