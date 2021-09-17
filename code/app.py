@@ -22,6 +22,7 @@ svc_list = app.config['SCV_LIST']
 app_secret = app.config['APP_SECRET']
 token = app.config['TOKEN']
 mytoken = app.config['MYTOKEN']
+nick_list = app.config['NICK_LIST']
 
 
 def get_git_info():
@@ -223,7 +224,7 @@ def index():
 
         data = request.json
         senderNick = data.get('senderNick')
-        if senderNick == '苏合信':
+        if senderNick in nick_list:
             content = data.get('text').get('content').strip()
             if content == 'check':
                 print(content)

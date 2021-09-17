@@ -28,6 +28,7 @@ class BaseConfig(object):
                 "qsls-app",
                 "bigtree-pay"
                 )
+    NICK_LIST = ("苏合信", "常蒙蒙")
 
 class APSchedulerJobConfig(BaseConfig):
     SCHEDULER_API_ENABLED = True
