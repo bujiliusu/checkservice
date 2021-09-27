@@ -26,12 +26,11 @@ nick_list = app.config['NICK_LIST']
 
 
 def get_git_info():
-    ids = ['998', '1004']
-    baseurl = "https://gitlab.bigtree.com/api/v4/projects/{}/merge_requests?state=merged"
-    url = "https://gitlab.bigtree.com/api/v4/projects/998/merge_requests?state=merged"
+    ids = ['20', '19']
+    baseurl = "https://git.int.bigtree.tech/api/v4/projects/{}/merge_requests?state=merged&target_branch=master"
     urls = [ {'id':id, 'url': baseurl.format(id)} for id in ids]
     headr = {
-        'private-token': 'gFPx-7R9byeF2wxUhJnS'
+        'private-token': 'iz7zm_TLxn4isA1eMn_D'
     }
     result_info_list = []
     for url in urls:
@@ -51,7 +50,7 @@ def check_service():
             merged_at = merged_at + timedelta(hours=8)
             merged_at_string = merged_at.strftime("%Y-%m-%d %H:%M:%S")
             target_branch = merge['target_branch']
-            if merged_at.date() == datetime.now().date() and target_branch == "master":
+            if merged_at.date() == datetime.now().date():
                 if datetime.now().hour == 22:
                     if merged_at_string.split()[1] <= '13:15:00':
                         continue
