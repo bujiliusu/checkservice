@@ -55,9 +55,9 @@ def check_service():
                     if merged_at_string.split()[1] <= '13:15:00':
                         continue
                 title = merge['title']
-                if result_info['id'] == '998':
+                if result_info['id'] == '20':
                     name = 'bigtree-deploy'
-                if result_info['id'] == '1004':
+                if result_info['id'] == '19':
                     name = 'qsls-deploy'
                 title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
                 message = get_svc_info(url, svc_list, title)
@@ -78,9 +78,9 @@ def check_service_test():
                     if merged_at_string.split()[1] <= '13:10:00':
                         continue
                 title = merge['title']
-                if result_info['id'] == '998':
+                if result_info['id'] == '20':
                     name = 'bigtree-deploy'
-                if result_info['id'] == '1004':
+                if result_info['id'] == '19':
                     name = 'qsls-deploy'
                 title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
                 text = get_svc_info(url, svc_list, title)
