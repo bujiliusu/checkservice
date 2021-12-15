@@ -3,4 +3,8 @@ build-job:
   script:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}"
     - echo "$CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $CI_REGISTRY/bigtree/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_SHA"
-    - echo "s#bigtree/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.*#bigtree/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_SHA#" "$GITOPS_IMAGE_YAML"
+    - echo "s#bigtree/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.*#bigtree/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_SHA#"            -
+    - echo "$GITOPS_IMAGE_YAML"
+    - echo "$GITLAB_USER_EMAIL" && git config --global user.name "$GITLAB_USER_LOGIN"
+    - echo "$GITOPS_IMAGE_YAML  $CI_PROJECT_NAME  $CI_COMMIT_TITLE 镜像tag无更新！"
+     
