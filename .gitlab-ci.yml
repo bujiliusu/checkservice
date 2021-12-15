@@ -6,4 +6,5 @@ build-job:
     - echo "s#bigtree/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.*#bigtree/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_SHA#"            -
     - echo "$GITOPS_IMAGE_YAML"
     - echo "$GITLAB_USER_EMAIL"
+    - echo "$CI_COMMIT_TITLE"
      
