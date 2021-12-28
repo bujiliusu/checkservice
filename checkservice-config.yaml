@@ -42,7 +42,7 @@ data:
         SCHEDULER_API_ENABLED = True
         SCHEDULER_TIMEZONE = 'Asia/Shanghai'
         MYTOKEN = 'f8e5c0d09f615101e6067428996af309ec3cbdbd20d31a8cb241b4fb8995f4a2'
-        TOKEN = 'ddaa188cf6d31915cd653d54538bd3d8bdc88d9b48a4e6ed4cdcf2e9f7dbd300'
+        TOKEN = 'ce233ed37d66c1f38dfef475790708e387ef4451e85da50d20af994e81d52409'
 
         JOBS = [
             {
