@@ -246,5 +246,5 @@ if __name__ == "__main__":
     scheduler.add_listener(my_listener, EVENT_ALL)
     scheduler.init_app(app)
     scheduler.start()
-    app.run(host='0.0.0.0', port=8888)
+    app.run(host='0.0.0.0')
 
