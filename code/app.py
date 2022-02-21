@@ -210,16 +210,16 @@ def my_listener(event: SchedulerEvent):
 @app.route("/", methods=['GET','POST', 'HEAD'])
 def index():
     if request.method == 'GET':
-        abort(404)
+        return '', 404, {'Server': 'nginx'}
     if request.method == 'HEAD':
-        abort(404)
+        return '', 404, {'Server': 'nginx'}
     if request.method == 'POST':
         post_timestamp = request.headers.get('Timestamp')
         sign = getsign(app_secret, post_timestamp)
         post_sign = request.headers.get('Sign')
         timestamp = str(round(time.time() * 1000))
         if post_sign != sign or abs(int(post_timestamp) - int(timestamp)) > 360000:
-            abort(404)
+            return '', 404, {'Server': 'nginx'}
 
         data = request.json
         senderNick = data.get('senderNick')
@@ -246,5 +246,5 @@ if __name__ == "__main__":
     scheduler.add_listener(my_listener, EVENT_ALL)
     scheduler.init_app(app)
     scheduler.start()
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=8888)
 
