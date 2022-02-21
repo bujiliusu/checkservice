@@ -101,8 +101,8 @@ def check_service_test():
     if message == '':
         message = '今日无上线\n'
         title = '服务健康检查:\n'
-        text_bt_qsls = get_svc_info(url, svc_list, title)
-        text_fdp = get_nacos_info(nacos, nacos_list, title)
+        text_bt_qsls = get_svc_info(url, svc_list)
+        text_fdp = get_nacos_info(nacos, nacos_list)
         text_bt_qsls = text_bt_qsls if text_bt_qsls != '所有服务正常' else ''
         text_fdp = text_fdp if text_fdp != '所有服务正常' else ''
         if text_fdp == '' and text_bt_qsls == '':
