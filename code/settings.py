@@ -1,7 +1,7 @@
 class BaseConfig(object):
     URL = 'http://spboot.bigtreefinance.com/admin/applications'
     APP_SECRET = '0UC8fpFH9sUGww7_b8AjNmmLwEPl6u7b-NyWoezr1gUQfwH3bslOXp5C4znxC4c_'
-    NACOS = 'https://nacos.k6.bigtree.tech/nacos/v1/ns/catalog/services?hasIpCount=true&withInstances=false&pageNo=1&pageSize=10&serviceNameParam=&groupNameParam=&accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuYWNvcyIsImV4cCI6MTYzMTU1MzQwNH0.q8Yk0814Ll5enWNOdnOOvD2XqkpISV53gcKy2kT2ux4&namespaceId=btfdp'
+    NACOS = 'https://nacos.k6.bigtree.tech/nacos/v1/ns/catalog/services?hasIpCount=true&withInstances=false&pageNo=1&pageSize=10&serviceNameParam=&groupNameParam=&accessToken={}&namespaceId=btfdp'
     SCV_LIST = ("bigtree-audit",
                 "bigtree-auth",
                 "bigtree-credit",

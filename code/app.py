@@ -151,10 +151,11 @@ def get_nacos_info(url, svc_list, add_message=''):
         'username': 'nacos',
         'password': 'nacos'
     }
-    token = requests.post(login_url).json()['accessToken']
+    r = requests.post(login_url, data=payload)
+    nacos_token = r.json()['accessToken']
 
     url = url
-    url = url.format(token)
+    url = url.format(nacos_token)
     svc_list = svc_list
     svc_info = {}
     svc_info_list = []
