@@ -65,6 +65,10 @@ def check_service():
                     name = 'fdp-deploy'
                 title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
                 message = get_svc_info(url, svc_list, title)
+                if name == 'fdp-deploy':
+                    message = get_nacos_info(nacos, nacos_list, title)
+                else:
+                    message = get_svc_info(url, svc_list, title)
                 logging.info(message)
                 post_ding_pro(message)
 def check_service_test():
@@ -97,7 +101,15 @@ def check_service_test():
     if message == '':
         message = '今日无上线\n'
         title = '服务健康检查:\n'
-        text = get_svc_info(url, svc_list, title)
+        text_bt_qsls = get_svc_info(url, svc_list, title)
+        text_fdp = get_nacos_info(nacos, nacos_list, title)
+        text_bt_qsls = text_bt_qsls if text_bt_qsls != '所有服务正常' else ''
+        text_fdp = text_fdp if text_fdp != '所有服务正常' else ''
+        if text_fdp == '' and text_bt_qsls == '':
+            text = '所有服务正常'
+        else:
+            text = text_bt_qsls + '\n' + text_fdp
+            text = text.lstrip()
         message = message + text + '\n'
     logging.info(message)
     post_ding_test(message)
@@ -287,5 +299,5 @@ if __name__ == "__main__":
     scheduler.add_listener(my_listener, EVENT_ALL)
     scheduler.init_app(app)
     scheduler.start()
-    app.run(host='0.0.0.0', port=8888)
+    app.run(host='0.0.0.0')
 
