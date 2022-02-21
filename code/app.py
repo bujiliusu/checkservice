@@ -146,7 +146,15 @@ def get_svc_info(url, svc_list, add_message=''):
     return message
 
 def get_nacos_info(url, svc_list, add_message=''):
+    login_url = 'https://nacos.k6.bigtree.tech/nacos/v1/auth/users/login'
+    payload =  {
+        'username': 'nacos',
+        'password': 'nacos'
+    }
+    token = requests.post(login_url).json()['accessToken']
+
     url = url
+    url = url.format(token)
     svc_list = svc_list
     svc_info = {}
     svc_info_list = []
