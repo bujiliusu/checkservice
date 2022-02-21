@@ -23,10 +23,12 @@ app_secret = app.config['APP_SECRET']
 token = app.config['TOKEN']
 mytoken = app.config['MYTOKEN']
 nick_list = app.config['NICK_LIST']
+nacos = app.config['NACOS']
+nacos_list = app.config['NACOS_LIST']
 
 
 def get_git_info():
-    ids = ['20', '19']
+    ids = ['20', '19', '23']
     baseurl = "https://git.int.bigtree.tech/api/v4/projects/{}/merge_requests?state=merged&target_branch=master"
     urls = [ {'id':id, 'url': baseurl.format(id)} for id in ids]
     headr = {
@@ -59,6 +61,8 @@ def check_service():
                     name = 'bigtree-deploy'
                 if result_info['id'] == '19':
                     name = 'qsls-deploy'
+                if result_info['id'] == '23':
+                    name = 'fdp-deploy'
                 title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
                 message = get_svc_info(url, svc_list, title)
                 logging.info(message)
@@ -82,8 +86,13 @@ def check_service_test():
                     name = 'bigtree-deploy'
                 if result_info['id'] == '19':
                     name = 'qsls-deploy'
+                if result_info['id'] == '23':
+                    name = 'fdp-deploy'
                 title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
-                text = get_svc_info(url, svc_list, title)
+                if name == 'fdp-deploy':
+                    text = get_nacos_info(nacos, nacos_list, title)
+                else:
+                    text = get_svc_info(url, svc_list, title)
                 message = message + text + '\n'
     if message == '':
         message = '今日无上线\n'
@@ -119,6 +128,38 @@ def get_svc_info(url, svc_list, add_message=''):
     message = ""
     for svc_info in svc_info_list:
         if svc_info.get('status') != 'UP':
+            message += svc_info.get('name') + "服务异常，请登录服务器检查\n"
+    message = message if message else "所有服务正常"
+    message = add_message + message
+    return message
+
+def get_nacos_info(url, svc_list, add_message=''):
+    url = url
+    svc_list = svc_list
+    svc_info = {}
+    svc_info_list = []
+
+    json_result_ori = requests.get(url).json()
+    json_result = json_result_ori['serviceList']
+    count = json_result_ori['count']
+
+    for svc in svc_list:
+        for result in json_result:
+            if result.get('name') == svc:
+                svc_info = {}
+                svc_info['name'] = svc
+                svc_info['healthyInstanceCount'] = result.get('healthyInstanceCount')
+                svc_info_list.append(svc_info)
+    result = [svc['name'] for svc in json_result]
+    for svc in svc_list:
+        if svc not in result:
+            svc_info = {}
+            svc_info['name'] = svc
+            svc_info['healthyInstanceCount'] = 0
+            svc_info_list.append(svc_info)
+    message = ""
+    for svc_info in svc_info_list:
+        if svc_info.get('healthyInstanceCount') < 1:
             message += svc_info.get('name') + "服务异常，请登录服务器检查\n"
     message = message if message else "所有服务正常"
     message = add_message + message
