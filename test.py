@@ -18,3 +18,8 @@ token = r.json()['accessToken']
 r = requests.get(url2.format(token))
 print(r.json())
 
+
+url = 'http://spboot.bigtreefinance.com/admin/applications'
+json_result = requests.get(url).json()
+
+print(json_result)
