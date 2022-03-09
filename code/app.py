@@ -64,7 +64,6 @@ def check_service():
                 if result_info['id'] == '23':
                     name = 'fdp-deploy'
                 title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
-                message = get_svc_info(url, svc_list, title)
                 if name == 'fdp-deploy':
                     message = get_nacos_info(nacos, nacos_list, title)
                 else:
