@@ -268,6 +268,13 @@ def my_listener(event: SchedulerEvent):
     time_now = datetime.now()
     print("starting cron at", time_now, event.code)
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return '', 404, {'Server': 'nginx'}
+@app.errorhandler(500)
+def page_not_found(e):
+    return '', 500, {'Server': 'nginx'}
+
 @app.route("/", methods=['GET','POST', 'HEAD'])
 def index():
     if request.method == 'GET':
