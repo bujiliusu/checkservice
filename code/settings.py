@@ -1,7 +1,7 @@
 class BaseConfig(object):
     URL = 'http://spboot.bigtreefinance.com/admin/applications'
     APP_SECRET = '0UC8fpFH9sUGww7_b8AjNmmLwEPl6u7b-NyWoezr1gUQfwH3bslOXp5C4znxC4c_'
-    NACOS = 'https://nacos.k6.bigtree.tech/nacos/v1/ns/catalog/services?hasIpCount=true&withInstances=false&pageNo=1&pageSize=10&serviceNameParam=&groupNameParam=&accessToken={}&namespaceId=btfdp'
+    NACOS = 'https://nacos.k6.bigtree.tech/nacos/v1/ns/catalog/services?hasIpCount=true&withInstances=false&pageNo=1&pageSize=100&serviceNameParam=&groupNameParam=&accessToken={}&namespaceId=btfdp'
     SCV_LIST = ("bigtree-audit",
                 "bigtree-auth",
                 "bigtree-credit",
@@ -42,6 +42,7 @@ class BaseConfig(object):
                   "bigtree-message-nacos",
                   "fund-bank-wh",
                   "fund-bank-qs",
+                  "fund-bank-xiaowei",
                   "fund-payment-unionpay"
                   )
     NICK_LIST = ("苏合信", "常蒙蒙")
