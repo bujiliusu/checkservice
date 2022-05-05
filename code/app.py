@@ -18,6 +18,7 @@ logging.getLogger().setLevel(logging.INFO)
 app = Flask(__name__)
 app.config.from_object('settings.APSchedulerJobConfig')
 url = app.config['URL']
+risk_url = app.config['RISK_URL']
 svc_list = app.config['SCV_LIST']
 app_secret = app.config['APP_SECRET']
 token = app.config['TOKEN']
@@ -28,7 +29,7 @@ nacos_list = app.config['NACOS_LIST']
 
 
 def get_git_info():
-    ids = ['20', '19', '23']
+    ids = ['20', '19', '23', '26']
     baseurl = "https://git.int.bigtree.tech/api/v4/projects/{}/merge_requests?state=merged&target_branch=master"
     urls = [ {'id':id, 'url': baseurl.format(id)} for id in ids]
     headr = {
@@ -63,9 +64,13 @@ def check_service():
                     name = 'qsls-deploy'
                 if result_info['id'] == '23':
                     name = 'fdp-deploy'
+                if result_info['id'] == '26':
+                    name = 'risk-deploy'
                 title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
                 if name == 'fdp-deploy':
                     message = get_nacos_info(nacos, nacos_list, title)
+                elif name == 'risk-deploy':
+                    message = get_risk_info(title)
                 else:
                     message = get_svc_info(url, svc_list, title)
                 logging.info(message)
@@ -91,9 +96,13 @@ def check_service_test():
                     name = 'qsls-deploy'
                 if result_info['id'] == '23':
                     name = 'fdp-deploy'
+                if result_info['id'] == '26':
+                    name = 'risk-deploy'
                 title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
                 if name == 'fdp-deploy':
                     text = get_nacos_info(nacos, nacos_list, title)
+                elif name == 'risk-deploy':
+                    message = get_risk_info(title)
                 else:
                     text = get_svc_info(url, svc_list, title)
                 message = message + text + '\n'
@@ -102,12 +111,14 @@ def check_service_test():
         title = '服务健康检查:\n'
         text_bt_qsls = get_svc_info(url, svc_list)
         text_fdp = get_nacos_info(nacos, nacos_list)
+        text_risk = get_risk_info()
         text_bt_qsls = text_bt_qsls if text_bt_qsls != '所有服务正常' else ''
         text_fdp = text_fdp if text_fdp != '所有服务正常' else ''
-        if text_fdp == '' and text_bt_qsls == '':
+        text_risk = text_risk if text_risk != '所有服务正常' else ''
+        if text_fdp == '' and text_bt_qsls == '' and text_risk == '':
             text = '所有服务正常'
         else:
-            text = text_bt_qsls + '\n' + text_fdp
+            text = text_bt_qsls + '\n' + text_fdp + '\n' + text_risk
             text = text.lstrip()
         message = message + text + '\n'
     logging.info(message)
@@ -181,6 +192,15 @@ def get_nacos_info(url, svc_list, add_message=''):
     for svc_info in svc_info_list:
         if svc_info.get('healthyInstanceCount') < 1:
             message += svc_info.get('name') + "服务异常，请登录服务器检查\n"
+    message = message if message else "所有服务正常"
+    message = add_message + message
+    return message
+
+def get_risk_info(add_message=''):
+    message = ""
+    code = requests.get(risk_url).status_code
+    if code != 200:
+        message = "风控系统服务异常，请登录服务器检查\n"
     message = message if message else "所有服务正常"
     message = add_message + message
     return message
