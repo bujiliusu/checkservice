@@ -102,7 +102,7 @@ def check_service_test():
                 if name == 'fdp-deploy':
                     text = get_nacos_info(nacos, nacos_list, title)
                 elif name == 'risk-deploy':
-                    message = get_risk_info(title)
+                    text = get_risk_info(title)
                 else:
                     text = get_svc_info(url, svc_list, title)
                 message = message + text + '\n'

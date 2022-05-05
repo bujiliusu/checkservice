@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checkservice
+  namespace: ops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: checkservice
+  template:
+    metadata:
+      labels:
+        app: checkservice
+    spec:
+      containers:
+        - name: checkservice
+          image: registry.int.bigtree.tech/aiops/checkservice
+          args: ["python", "app.py"]
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+          - name: settings
+            mountPath: /code/settings.py
+            subPath: settings.py
+      volumes:
+      - name: settings
+        configMap:
+          name: checkservice-settings
+          items:
+          - key: settings.py
+            path: settings.py
