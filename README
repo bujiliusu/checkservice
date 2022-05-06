@@ -1,3 +1,11 @@
 检查服务状态
+发布1
 docker build -t checkservice code
 docker tag checkservice registry.int.bigtree.tech/aiops/checkservice:v0.22
+docker push registry.int.bigtree.tech/aiops/checkservice:v0.22
+kustomize build |kubectl apply -f -
+
+发布2
+cd code
+skaffold run
+kubectl apply -f checkservice-config.yaml
