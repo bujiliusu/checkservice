@@ -1,17 +1,24 @@
-apiVersion: skaffold/v1beta3
+apiVersion: skaffold/v2beta25
 kind: Config
 build:
   artifacts:
     - image: registry.int.bigtree.tech/aiops/checkservice
-  local:
-    push: true
+      kaniko:
+        image: registry.int.bigtree.tech/skaffold/kaniko-executor:latest
+        initImage: registry:5000/base/busybox:latest
+        volumeMounts:
+          - mountPath: /kaniko/.docker/
+            name: docker-config
+  tagPolicy:
+    gitCommit:
+      variant: CommitSha
+  cluster:
+    namespace: default
+    volumes:
+      - configMap:
+          name: docker-config
+        name: docker-config
 deploy:
   kubectl:
     manifests:
-      - ../checkservice-config.yaml	
-      - ../checkservice-dep.yaml	
-      - ../checkservice-svc.yaml
-    flags:
-      apply:
-        - --force=true
-        - --grace-period=0
+      - ./deploy.yaml
