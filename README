@@ -7,5 +7,5 @@ kustomize build |kubectl apply -f -
 
 发布2
 cd code
-skaffold run
 kubectl apply -f checkservice-config.yaml
+skaffold run
