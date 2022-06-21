@@ -6,8 +6,8 @@ docker push registry.int.bigtree.tech/aiops/checkservice:v0.22
 kustomize build |kubectl apply -f -
 
 发布2
-cd code
 kubectl apply -f checkservice-config.yaml
+cd code
 skaffold run
 
 release/1.0.0 
