@@ -123,14 +123,16 @@ def check_service_test():
         title = '服务健康检查:\n'
         text_bt_qsls = get_svc_info(url, svc_list)
         text_fdp = get_nacos_info(nacos, nacos_list)
+        text_rx = get_nacos_info(rx_nacos, rx_nacos_list)
         text_risk = get_risk_info()
         text_bt_qsls = text_bt_qsls if text_bt_qsls != '所有服务正常' else ''
         text_fdp = text_fdp if text_fdp != '所有服务正常' else ''
+        text_rx = text_rx if text_rx != '所有服务正常' else ''
         text_risk = text_risk if text_risk != '所有服务正常' else ''
-        if text_fdp == '' and text_bt_qsls == '' and text_risk == '':
+        if text_fdp == '' and text_bt_qsls == '' and text_risk == '' and text_rx == '':
             text = '所有服务正常'
         else:
-            text = text_bt_qsls + '\n' + text_fdp + '\n' + text_risk
+            text = text_bt_qsls + '\n' + text_fdp + '\n' + text_risk + '\n' + text_rx
             text = text.lstrip()
         message = message + text + '\n'
     logging.info(message)
