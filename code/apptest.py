@@ -123,16 +123,14 @@ def check_service_test():
         title = '服务健康检查:\n'
         text_bt_qsls = get_svc_info(url, svc_list)
         text_fdp = get_nacos_info(nacos, nacos_list)
-        text_rx = get_nacos_info(rx_nacos, rx_nacos_list)
         text_risk = get_risk_info()
         text_bt_qsls = text_bt_qsls if text_bt_qsls != '所有服务正常' else ''
         text_fdp = text_fdp if text_fdp != '所有服务正常' else ''
-        text_rx = text_rx if text_rx != '所有服务正常' else ''
         text_risk = text_risk if text_risk != '所有服务正常' else ''
-        if text_fdp == '' and text_bt_qsls == '' and text_risk == '' and text_rx == '':
+        if text_fdp == '' and text_bt_qsls == '' and text_risk == '':
             text = '所有服务正常'
         else:
-            text = text_bt_qsls + '\n' + text_fdp + '\n' + text_risk + '\n' + text_rx
+            text = text_bt_qsls + '\n' + text_fdp + '\n' + text_risk
             text = text.lstrip()
         message = message + text + '\n'
     logging.info(message)
@@ -204,6 +202,7 @@ def get_nacos_info(url, svc_list, add_message=''):
                 svc_info['healthyInstanceCount'] = result.get('healthyInstanceCount')
                 svc_info_list.append(svc_info)
     result = [svc['name'] for svc in json_result]
+    print(svc_info_list)
     for svc in svc_list:
         if svc not in result:
             svc_info = {}
@@ -320,30 +319,11 @@ def page_not_found(e):
 @app.route("/", methods=['GET','POST', 'HEAD'])
 def index():
     if request.method == 'GET':
-        return '', 404, {'Server': 'nginx'}
-    if request.method == 'HEAD':
-        return '', 404, {'Server': 'nginx'}
-    if request.method == 'POST':
-        post_timestamp = request.headers.get('Timestamp')
-        sign = getsign(app_secret, post_timestamp)
-        post_sign = request.headers.get('Sign')
-        timestamp = str(round(time.time() * 1000))
-        if post_sign != sign or abs(int(post_timestamp) - int(timestamp)) > 360000:
-            return '', 404, {'Server': 'nginx'}
-
-        data = request.json
-        senderNick = data.get('senderNick')
-        if senderNick in nick_list:
-            content = data.get('text').get('content').strip()
-            if content == 'check':
-                print(content)
-                text = "主动检查服务健康状态，结果发送测试群：check dev，结果发送测试与业务群：check pro"
-                post_ding_test(text)
-            if content == 'check dev':
-                check_service_test()
-            if content == 'check pro':
-                check_service()
-
+        title = ''
+        message = get_nacos_info(rx_nacos, rx_nacos_list, title)
+        print(message)
+        message = get_nacos_info(nacos, nacos_list, title)
+        print(message)
         headers = {
             "content-type": "text/plain"
         }
@@ -352,9 +332,5 @@ def index():
         return response
 
 if __name__ == "__main__":
-    scheduler = APScheduler(BackgroundScheduler(timezone="Asia/Shanghai"))
-    scheduler.add_listener(my_listener, EVENT_ALL)
-    scheduler.init_app(app)
-    scheduler.start()
-    app.run(host='0.0.0.0')
+     app.run(host='0.0.0.0', port=9999)
 

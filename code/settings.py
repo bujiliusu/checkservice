@@ -1,7 +1,9 @@
 class BaseConfig(object):
     URL = 'http://spboot.bigtreefinance.com/admin/applications'
+    RISK_URL = 'https://risk.bigtreefinance.com/api/management/error'
     APP_SECRET = '0UC8fpFH9sUGww7_b8AjNmmLwEPl6u7b-NyWoezr1gUQfwH3bslOXp5C4znxC4c_'
     NACOS = 'https://nacos.k6.bigtree.tech/nacos/v1/ns/catalog/services?hasIpCount=true&withInstances=false&pageNo=1&pageSize=100&serviceNameParam=&groupNameParam=&accessToken={}&namespaceId=btfdp'
+    RX_NACOS = 'http://nacos.btrx.k6.bigtree.tech/nacos/v1/ns/catalog/services?hasIpCount=true&withInstances=false&pageNo=1&pageSize=100&serviceNameParam=&groupNameParam=&accessToken={}&namespaceId=btrx'
     SCV_LIST = ("bigtree-audit",
                 "bigtree-auth",
                 "bigtree-credit",
@@ -45,6 +47,19 @@ class BaseConfig(object):
                   "fund-bank-xiaowei",
                   "fund-payment-unionpay"
                   )
+
+
+    RX_NACOS_LIST = ("rx-job-admin",
+                     "rx-gateway",
+                     "rx-sign",
+                     "rx-customer",
+                     "rx-app",
+                     "rx-back",
+                     "rx-system",
+                     "rx-auth",
+                     "rx-message",
+                     "rx-file"
+                     )
     NICK_LIST = ("苏合信", "常蒙蒙")
 
 class APSchedulerJobConfig(BaseConfig):
