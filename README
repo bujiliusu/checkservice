@@ -12,3 +12,7 @@ skaffold run
 
 release/1.0.0 
 添加风控健康检查
+
+release/1.1.0
+添加融信健康检查
+
