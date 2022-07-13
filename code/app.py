@@ -25,6 +25,7 @@ svc_list = app.config['SCV_LIST']
 app_secret = app.config['APP_SECRET']
 token = app.config['TOKEN']
 mytoken = app.config['MYTOKEN']
+rxtoken = app.config['RXTOKEN']
 nick_list = app.config['NICK_LIST']
 nacos = app.config['NACOS']
 rx_nacos = app.config['RX_NACOS']
@@ -49,6 +50,8 @@ def get_git_info():
     return result_info_list
 
 def check_service():
+    global token
+    global rxtoken
     result_info_list = get_git_info()
     for result_info in result_info_list:
         for merge in result_info['result']:
@@ -82,7 +85,10 @@ def check_service():
                 else:
                     message = get_svc_info(url, svc_list, title)
                 logging.info(message)
-                post_ding_pro(message)
+                if name == 'rx-deploy':
+                    post_ding_pro(message, rxtoken)
+                else:
+                    post_ding_pro(message, token)
 def check_service_test():
     result_info_list = get_git_info()
     message = ''
@@ -265,9 +271,9 @@ def post_ding_test(content):
     except Exception as ee:
         print(ee)
 
-def post_ding_pro(content):
+def post_ding_pro(content, token):
     content = content
-    global token
+    token = token
     global mytoken
     url = "https://oapi.dingtalk.com/robot/send?access_token=" + token
     myurl = "https://oapi.dingtalk.com/robot/send?access_token=" + mytoken
@@ -296,7 +302,7 @@ def post_ding_pro(content):
     try:
         requests.adapters.DEFAULT_RETRIES = 2
         result= requests.post(url, data=json.dumps(body), headers=headers, verify=False, timeout=5)
-        if content.find('异常') != -1:
+        if content.find('服务异常，请登录服务器检查') != -1:
             myresult= requests.post(myurl, data=json.dumps(body_test), headers=headers, verify=False, timeout=5)
         else:
             myresult = requests.post(myurl, data=json.dumps(body), headers=headers, verify=False, timeout=5)
