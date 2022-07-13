@@ -34,9 +34,11 @@ data:
                     "qsls-front",
                     "qsls-fund",
                     "qsls-limit",
+                    "qsls-newexpense",
                     "qsls-postloan",
                     "qsls-receivable",
-                    "qsls-referee"
+                    "qsls-referee",
+                    "qsls-thirdparty"
                     )
         NACOS_LIST = ("fund-platform",
                       "fund-batch",
