@@ -71,6 +71,7 @@ data:
         SCHEDULER_TIMEZONE = 'Asia/Shanghai'
         MYTOKEN = 'f8e5c0d09f615101e6067428996af309ec3cbdbd20d31a8cb241b4fb8995f4a2'
         TOKEN = 'ce233ed37d66c1f38dfef475790708e387ef4451e85da50d20af994e81d52409'
+        RXTOKEN = 'b287bdf8ecca0b708ad1c4de8c7bdeb7bf63780243976f8c70900eac77296ed2'
 
         JOBS = [
             {
