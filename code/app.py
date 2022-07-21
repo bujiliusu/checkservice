@@ -160,7 +160,7 @@ def get_svc_info(url, svc_list, add_message=''):
                 svc_info['status'] = result.get('status')
                 svc_info_list.append(svc_info)
 
-    result = [svc['name'] for svc in json_result]
+    result = [svc['name'] for svc in svc_info_list]
     for svc in svc_list:
         if svc not in result:
             svc_info = {}
