@@ -98,9 +98,9 @@ def check_service(env='pro'):
                         post_ding_pro(message, rxtoken)
                     else:
                         post_ding_pro(message, token)
-                if env == 'test':
+                if env == 'dev':
                     messageAll = messageAll + message + '\n'
-    if env == 'test':
+    if env == 'dev':
         if messageAll == '':
             messageAll = '今日无上线\n'
             title = '服务健康检查:\n'
