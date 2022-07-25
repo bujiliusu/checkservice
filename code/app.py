@@ -29,12 +29,14 @@ rxtoken = app.config['RXTOKEN']
 nick_list = app.config['NICK_LIST']
 nacos = app.config['NACOS']
 rx_nacos = app.config['RX_NACOS']
+dyy_nacos = app.config['DYY_NACOS']
 nacos_list = app.config['NACOS_LIST']
 rx_nacos_list = app.config['RX_NACOS_LIST']
+dyy_nacos_list = app.config['DYY_NACOS_LIST']
 
 
 def get_git_info():
-    ids = ['20', '19', '23', '26', '244']
+    ids = ['20', '19', '23', '26', '244', '387']
     baseurl = "https://git.int.bigtree.tech/api/v4/projects/{}/merge_requests?state=merged&target_branch=master"
     urls = [ {'id':id, 'url': baseurl.format(id)} for id in ids]
     headr = {
@@ -49,9 +51,11 @@ def get_git_info():
         result_info_list.append(result_info)
     return result_info_list
 
-def check_service():
+def check_service(env='pro'):
     global token
     global rxtoken
+    message = ''
+    messageAll = ''
     result_info_list = get_git_info()
     for result_info in result_info_list:
         for merge in result_info['result']:
@@ -75,74 +79,104 @@ def check_service():
                     name = 'risk-deploy'
                 if result_info['id'] == '244':
                     name = 'rx-deploy'
+                if result_info['id'] == '387':
+                    name = 'dyy-deploy'
                 title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
                 if name == 'fdp-deploy':
                     message = get_nacos_info(nacos, nacos_list, title)
                 elif name == 'rx-deploy':
                     message = get_nacos_info(rx_nacos, rx_nacos_list, title)
+                elif name == 'dyy-deploy':
+                    message = get_nacos_info(dyy_nacos, dyy_nacos_list, title)
                 elif name == 'risk-deploy':
                     message = get_risk_info(title)
                 else:
                     message = get_svc_info(url, svc_list, title)
-                logging.info(message)
-                if name == 'rx-deploy':
-                    post_ding_pro(message, rxtoken)
-                else:
-                    post_ding_pro(message, token)
-def check_service_test():
-    result_info_list = get_git_info()
-    message = ''
-    for result_info in result_info_list:
-        for merge in result_info['result']:
-            merged_at_string = merge['merged_at'].split('.')[0]
-            merged_at = datetime.strptime(merged_at_string, '%Y-%m-%dT%H:%M:%S')
-            merged_at = merged_at + timedelta(hours=8)
-            merged_at_string = merged_at.strftime("%Y-%m-%d %H:%M:%S")
-            target_branch = merge['target_branch']
-            if merged_at.date() == datetime.now().date() and target_branch == "master":
-                if datetime.now().hour == 22:
-                    if merged_at_string.split()[1] <= '13:10:00':
-                        continue
-                title = merge['title']
-                if result_info['id'] == '20':
-                    name = 'bigtree-deploy'
-                if result_info['id'] == '19':
-                    name = 'qsls-deploy'
-                if result_info['id'] == '23':
-                    name = 'fdp-deploy'
-                if result_info['id'] == '26':
-                    name = 'risk-deploy'
-                if result_info['id'] == '244':
-                    name = 'rx-deploy'
-                title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
-                if name == 'fdp-deploy':
-                    text = get_nacos_info(nacos, nacos_list, title)
-                elif name == 'rx-deploy':
-                    message = get_nacos_info(rx_nacos, rx_nacos_list, title)
-                elif name == 'risk-deploy':
-                    text = get_risk_info(title)
-                else:
-                    text = get_svc_info(url, svc_list, title)
-                message = message + text + '\n'
-    if message == '':
-        message = '今日无上线\n'
-        title = '服务健康检查:\n'
-        text_bt_qsls = get_svc_info(url, svc_list)
-        text_fdp = get_nacos_info(nacos, nacos_list)
-        text_rx = get_nacos_info(rx_nacos, rx_nacos_list)
-        text_risk = get_risk_info()
-        text_bt_qsls = text_bt_qsls if text_bt_qsls != '所有服务正常' else ''
-        text_fdp = text_fdp if text_fdp != '所有服务正常' else ''
-        text_rx = text_rx if text_rx != '所有服务正常' else ''
-        text_risk = text_risk if text_risk != '所有服务正常' else ''
-        if text_fdp == '' and text_bt_qsls == '' and text_risk == '' and text_rx == '':
-            text = '所有服务正常'
-        else:
-            text = text_bt_qsls + '\n' + text_fdp + '\n' + text_risk + '\n' + text_rx
-            text = text.lstrip()
-        message = message + text + '\n'
-    logging.info(message)
-    post_ding_test(message)
+                if env == 'pro':
+                    logging.info(message)
+                    if name == 'rx-deploy' or name == 'dyy-deploy':
+                        post_ding_pro(message, rxtoken)
+                    else:
+                        post_ding_pro(message, token)
+                if env == 'test':
+                    messageAll = messageAll + message + '\n'
+    if env == 'test':
+        if messageAll == '':
+            messageAll = '今日无上线\n'
+            title = '服务健康检查:\n'
+            text_bt_qsls = get_svc_info(url, svc_list)
+            text_fdp = get_nacos_info(nacos, nacos_list)
+            text_rx = get_nacos_info(rx_nacos, rx_nacos_list)
+            text_dyy = get_nacos_info(dyy_nacos, dyy_nacos_list)
+            text_risk = get_risk_info()
+            text_bt_qsls = text_bt_qsls if text_bt_qsls != '所有服务正常' else ''
+            text_fdp = text_fdp if text_fdp != '所有服务正常' else ''
+            text_rx = text_rx if text_rx != '所有服务正常' else ''
+            text_dyy = text_dyy if text_rx != '所有服务正常' else ''
+            text_risk = text_risk if text_risk != '所有服务正常' else ''
+            if text_fdp == '' and text_bt_qsls == '' and text_risk == '' and text_rx == '' and text_dyy == '':
+                text = '所有服务正常'
+            else:
+                text = text_bt_qsls + '\n' + text_fdp + '\n' + text_risk + '\n' + text_rx + '\n' + text_dyy
+                text = text.lstrip()
+            messageAll = messageAll + text + '\n'
+        logging.info(messageAll)
+        post_ding_test(messageAll)
+
+# def check_service_test():
+#     result_info_list = get_git_info()
+#     message = ''
+#     for result_info in result_info_list:
+#         for merge in result_info['result']:
+#             merged_at_string = merge['merged_at'].split('.')[0]
+#             merged_at = datetime.strptime(merged_at_string, '%Y-%m-%dT%H:%M:%S')
+#             merged_at = merged_at + timedelta(hours=8)
+#             merged_at_string = merged_at.strftime("%Y-%m-%d %H:%M:%S")
+#             target_branch = merge['target_branch']
+#             if merged_at.date() == datetime.now().date() and target_branch == "master":
+#                 if datetime.now().hour == 22:
+#                     if merged_at_string.split()[1] <= '13:10:00':
+#                         continue
+#                 title = merge['title']
+#                 if result_info['id'] == '20':
+#                     name = 'bigtree-deploy'
+#                 if result_info['id'] == '19':
+#                     name = 'qsls-deploy'
+#                 if result_info['id'] == '23':
+#                     name = 'fdp-deploy'
+#                 if result_info['id'] == '26':
+#                     name = 'risk-deploy'
+#                 if result_info['id'] == '244':
+#                     name = 'rx-deploy'
+#                 title = name + '-' + title + '，已完成上线。' + '服务健康检查:\n'
+#                 if name == 'fdp-deploy':
+#                     text = get_nacos_info(nacos, nacos_list, title)
+#                 elif name == 'rx-deploy':
+#                     message = get_nacos_info(rx_nacos, rx_nacos_list, title)
+#                 elif name == 'risk-deploy':
+#                     text = get_risk_info(title)
+#                 else:
+#                     text = get_svc_info(url, svc_list, title)
+#                 message = message + text + '\n'
+#     if message == '':
+#         message = '今日无上线\n'
+#         title = '服务健康检查:\n'
+#         text_bt_qsls = get_svc_info(url, svc_list)
+#         text_fdp = get_nacos_info(nacos, nacos_list)
+#         text_rx = get_nacos_info(rx_nacos, rx_nacos_list)
+#         text_risk = get_risk_info()
+#         text_bt_qsls = text_bt_qsls if text_bt_qsls != '所有服务正常' else ''
+#         text_fdp = text_fdp if text_fdp != '所有服务正常' else ''
+#         text_rx = text_rx if text_rx != '所有服务正常' else ''
+#         text_risk = text_risk if text_risk != '所有服务正常' else ''
+#         if text_fdp == '' and text_bt_qsls == '' and text_risk == '' and text_rx == '':
+#             text = '所有服务正常'
+#         else:
+#             text = text_bt_qsls + '\n' + text_fdp + '\n' + text_risk + '\n' + text_rx
+#             text = text.lstrip()
+#         message = message + text + '\n'
+#     logging.info(message)
+#     post_ding_test(message)
 
 def get_svc_info(url, svc_list, add_message=''):
     url = url
@@ -346,9 +380,9 @@ def index():
                 text = "主动检查服务健康状态，结果发送测试群：check dev，结果发送测试与业务群：check pro"
                 post_ding_test(text)
             if content == 'check dev':
-                check_service_test()
+                check_service('dev')
             if content == 'check pro':
-                check_service()
+                check_service('pro')
 
         headers = {
             "content-type": "text/plain"
