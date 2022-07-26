@@ -111,21 +111,21 @@ def check_service(env='pro'):
             messageAll = '今日无上线\n'
             title = '服务健康检查:\n'
             text_bt_qsls = get_svc_info(url, svc_list)
+            text_risk = get_risk_info()
             text_fdp = get_nacos_info(nacos, nacos_list)
             text_rx = get_nacos_info(rx_nacos, rx_nacos_list)
             text_dyy = get_nacos_info(dyy_nacos, dyy_nacos_list)
             text_ifbc = get_nacos_info(ifbc_nacos, ifbc_nacos_list)
-            text_risk = get_risk_info()
             text_bt_qsls = text_bt_qsls if text_bt_qsls != '所有服务正常' else ''
+            text_risk = text_risk if text_risk != '所有服务正常' else ''
             text_fdp = text_fdp if text_fdp != '所有服务正常' else ''
             text_rx = text_rx if text_rx != '所有服务正常' else ''
-            text_dyy = text_dyy if text_rx != '所有服务正常' else ''
-            text_ifbc = text_ifbc if text_rx != '所有服务正常' else ''
-            text_risk = text_risk if text_risk != '所有服务正常' else ''
-            if text_fdp == '' and text_bt_qsls == '' and text_risk == '' and text_rx == '' and text_dyy == '' and text_ifbc == '':
+            text_dyy = text_dyy if text_dyy != '所有服务正常' else ''
+            text_ifbc = text_ifbc if text_ifbc != '所有服务正常' else ''
+            if text_bt_qsls == '' and text_risk == '' and text_fdp == '' and text_rx == '' and text_dyy == '' and text_ifbc == '':
                 text = '所有服务正常'
             else:
-                text = text_bt_qsls + '\n' + text_fdp + '\n' + text_risk + '\n' + text_rx + '\n' + text_dyy + '\n' + text_ifbc
+                text = text_bt_qsls + '\n' + text_risk + '\n' + text_fdp + '\n' + text_rx + '\n' + text_dyy + '\n' + text_ifbc
                 text = text.lstrip()
             messageAll = messageAll + text + '\n'
         logging.info(messageAll)
