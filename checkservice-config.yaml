@@ -44,7 +44,9 @@ data:
                     )
         NACOS_LIST = ("fund-platform",
                       "fund-batch",
+                      "fund-bank-sx",
                       "datawarehouse-platform",
+                      "fund-bank-shanmei",
                       "bigtree-file",
                       "fund-gateway",
                       "bigtree-system",
@@ -55,7 +57,8 @@ data:
                       "fund-payment-unionpay",
                       "fund-bank-zx"
                     )
-        RX_NACOS_LIST = ("rx-job-admin",
+        RX_NACOS_LIST = ("rx-batch",
+                         "rx-job-admin",
                          "rx-gateway",
                          "rx-sign",
                          "rx-customer",
@@ -64,7 +67,8 @@ data:
                          "rx-system",
                          "rx-auth",
                          "rx-message",
-                         "rx-file"
+                         "rx-file",
+                         "rx-pay"
                     )
         DYY_NACOS_LIST = ("dyy-identify",
                           "dyy-admin-platform",
@@ -92,6 +96,7 @@ data:
                           "ifbc-app",
                           "ifbc-flow",
                           "ifbc-gateway",
+                          "ifbc-diamond",
                           "ifbc-product",
                           "ifbc-sign"
                     )
