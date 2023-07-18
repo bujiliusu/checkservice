@@ -5,10 +5,10 @@ data:
         URL = 'http://spboot.bigtreefinance.com/admin/applications'
         RISK_URL = 'https://risk.bigtreefinance.com/api/management/error'
         APP_SECRET = '0UC8fpFH9sUGww7_b8AjNmmLwEPl6u7b-NyWoezr1gUQfwH3bslOXp5C4znxC4c_'
-        NACOS = 'https://nacos.k6.bigtree.tech/nacos/v1/ns/catalog/services?hasIpCount=true&withInstances=false&pageNo=1&pageSize=100&serviceNameParam=&groupNameParam=&accessToken={}&namespaceId=btfdp'
-        RX_NACOS = 'http://nacos.btrx.k6.bigtree.tech/nacos/v1/ns/catalog/services?hasIpCount=true&withInstances=false&pageNo=1&pageSize=100&serviceNameParam=&groupNameParam=&accessToken={}&namespaceId=btrx'
-        DYY_NACOS = 'http://nacos.btdyy.k6.bigtree.tech/nacos/v1/ns/catalog/services?hasIpCount=true&withInstances=false&pageNo=1&pageSize=100&serviceNameParam=&groupNameParam=&accessToken={}&namespaceId=btdyy'
-        IFBC_NACOS = 'http://nacos.btifbc.k6.bigtree.tech/nacos/v1/ns/catalog/services?hasIpCount=true&withInstances=false&pageNo=1&pageSize=100&serviceNameParam=&groupNameParam=&accessToken={}&namespaceId=btifbc'
+        NACOS = 'https://nacos.k7.bigtree.tech/nacos/v1/ns/catalog/services?hasIpCount=true&withInstances=false&pageNo=1&pageSize=100&serviceNameParam=&groupNameParam=&accessToken={}&namespaceId=btfdp'
+        RX_NACOS = 'http://nacos.btrx.k7.bigtree.tech/nacos/v1/ns/catalog/services?hasIpCount=true&withInstances=false&pageNo=1&pageSize=100&serviceNameParam=&groupNameParam=&accessToken={}&namespaceId=btrx'
+        DYY_NACOS = 'http://nacos.btdyy.k7.bigtree.tech/nacos/v1/ns/catalog/services?hasIpCount=true&withInstances=false&pageNo=1&pageSize=100&serviceNameParam=&groupNameParam=&accessToken={}&namespaceId=btdyy'
+        IFBC_NACOS = 'http://nacos.btifbc.k7.bigtree.tech/nacos/v1/ns/catalog/services?hasIpCount=true&withInstances=false&pageNo=1&pageSize=100&serviceNameParam=&groupNameParam=&accessToken={}&namespaceId=btifbc'
         SCV_LIST = ("bigtree-audit",
                     "bigtree-auth",
                     "bigtree-credit",
