@@ -83,22 +83,26 @@ data:
                           "dyy-credit",
                           "dyy-job-platform"
                     )
-        IFBC_NACOS_LIST = ("ifbc-file",
-                          "ifbc-admin-platform",
-                          "ifbc-job-admin",
-                          "ifbc-customer",
-                          "ifbc-system",
-                          "ifbc-batch",
-                          "ifbc-message",
-                          "ifbc-credit",
-                          "ifbc-identify",
-                          "ifbc-auth",
+        IFBC_NACOS_LIST = ("ifbc-admin-platform",
                           "ifbc-app",
-                          "ifbc-flow",
-                          "ifbc-gateway",
+                          "ifbc-auth",
+                          "ifbc-batch",
+                          "ifbc-business",
+                          "ifbc-channel",
+                          "ifbc-credit",
+                          "ifbc-customer",
                           "ifbc-diamond",
+                          "ifbc-file",
+                          "ifbc-flow",
+                          "ifbc-fund-trade",
+                          "ifbc-fund",
+                          "ifbc-gateway",
+                          "ifbc-identify",
+                          "ifbc-job-admin",
+                          "ifbc-message",
                           "ifbc-product",
                           "ifbc-sign"
+                          "ifbc-system",
                     )
         NICK_LIST = ("苏合信", "常蒙蒙")
 
