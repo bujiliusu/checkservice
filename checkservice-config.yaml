@@ -101,8 +101,8 @@ data:
                           "ifbc-job-admin",
                           "ifbc-message",
                           "ifbc-product",
-                          "ifbc-sign"
-                          "ifbc-system",
+                          "ifbc-sign",
+                          "ifbc-system"
                     )
         NICK_LIST = ("苏合信", "常蒙蒙")
 
