@@ -90,7 +90,7 @@ data:
                           "ifbc-sign",
                           "ifbc-system"
                     )
-        NICK_LIST = ("苏合信", "常蒙蒙")
+        NICK_LIST = ("苏合信", "李连广", "崔志阳")
 
     class APSchedulerJobConfig(BaseConfig):
         SCHEDULER_API_ENABLED = True
