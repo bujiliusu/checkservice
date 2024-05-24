@@ -324,7 +324,9 @@ def post_ding_pro(content, token):
         },
         "at": {
             "atMobiles": [
-                "18501257410"
+                "18501257410",
+                "13269188698",
+                "13366034560"
             ],
             "isAtAll": False
         }
